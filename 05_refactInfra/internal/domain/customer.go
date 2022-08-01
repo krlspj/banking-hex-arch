@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/krlspj/banking-hex-arch/05_refactInfra/internal/errs"
+
 type Customer struct {
 	ID          string
 	Name        string
@@ -13,5 +15,5 @@ type Customer struct {
 // contains the contracts for Costumer
 type CustomerRepository interface {
 	FindAll() ([]Customer, error)
-	ById(string) (*Customer, error)
+	ById(string) (*Customer, *errs.AppError)
 }

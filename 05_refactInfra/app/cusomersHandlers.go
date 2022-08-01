@@ -101,10 +101,15 @@ func (ch *CustomerHandlers) getCustomer(w http.ResponseWriter, r *http.Request) 
 	id := vars["customer_id"]
 	customer, err := ch.service.GetCustomer(id)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprintf(w, err.Error())
+		w.Header().Add("Content-type", "application/json")
+		w.WriteHeader(err.Code)
+		//fmt.Fprintf(w, err.Message)
+
+		json.NewEncoder(w).Encode(err)
+		//json.NewEncoder(w).Encode(err.AsMessage())
 	} else {
 		w.Header().Add("Content-type", "application/json")
+		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(customer)
 	}
 }
@@ -113,11 +118,10 @@ func (ch *CustomerHandlers) getCustomerMem(w http.ResponseWriter, r *http.Reques
 	id := vars["customer_id"]
 	customer, err := ch.servStub.GetCustomer(id)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprintf(w, err.Error())
+		//fmt.Fprintf(w, err.Message)
+		writeResponse(w, err.Code, err)
 	} else {
-		w.Header().Add("Content-type", "application/json")
-		json.NewEncoder(w).Encode(customer)
+		writeResponse(w, http.StatusOK, customer)
 	}
 }
 func GetCustomer(w http.ResponseWriter, r *http.Request) {
@@ -127,4 +131,12 @@ func GetCustomer(w http.ResponseWriter, r *http.Request) {
 
 func CreateCostumer(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "request content from post..")
+}
+
+func writeResponse(w http.ResponseWriter, code int, data any) {
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(code)
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		panic(err)
+	}
 }

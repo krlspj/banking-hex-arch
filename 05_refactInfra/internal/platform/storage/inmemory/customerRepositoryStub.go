@@ -1,9 +1,8 @@
 package inmemory
 
 import (
-	"errors"
-
 	"github.com/krlspj/banking-hex-arch/05_refactInfra/internal/domain"
+	"github.com/krlspj/banking-hex-arch/05_refactInfra/internal/errs"
 )
 
 // CustomerRepostoryStub would be the addapter, and should implement
@@ -27,11 +26,12 @@ func (s *CustomerRepositoryStub) FindAll() ([]domain.Customer, error) {
 	return s.customers, nil
 }
 
-func (s *CustomerRepositoryStub) ById(id string) (*domain.Customer, error) {
+func (s *CustomerRepositoryStub) ById(id string) (*domain.Customer, *errs.AppError) {
 	for _, v := range s.customers {
 		if v.ID == id {
 			return &v, nil
 		}
 	}
-	return nil, errors.New("User Not found")
+	//return nil, errors.New("User Not found")
+	return nil, errs.NewNotFoundError("User Not found")
 }

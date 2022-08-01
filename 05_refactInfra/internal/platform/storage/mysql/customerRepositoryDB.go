@@ -8,6 +8,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/krlspj/banking-hex-arch/05_refactInfra/internal/domain"
+	"github.com/krlspj/banking-hex-arch/05_refactInfra/internal/errs"
 )
 
 type CustomerRepositoryDB struct {
@@ -58,17 +59,17 @@ func (cdb *CustomerRepositoryDB) FindAll() ([]domain.Customer, error) {
 	return customers, nil
 }
 
-func (cbd *CustomerRepositoryDB) ById(id string) (*domain.Customer, error) {
+func (cbd *CustomerRepositoryDB) ById(id string) (*domain.Customer, *errs.AppError) {
 	customerSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where customer_id = ? "
 	row := cbd.conn.QueryRow(customerSql, id)
 	var c domain.Customer
 	err := row.Scan(&c.ID, &c.Name, &c.City, &c.Zipcode, &c.DateOfBirth, &c.Status)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, errors.New("Customer not found")
+			return nil, errs.NewNotFoundError("Customer not found")
 		} else {
 			log.Println("Error while scanning customer " + err.Error())
-			return nil, errors.New("Unexpected database error")
+			return nil, errs.NewUnexpedtedError("Unexpected database error")
 		}
 	}
 	return &c, nil
