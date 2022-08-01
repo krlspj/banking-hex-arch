@@ -96,6 +96,30 @@ func (ch *CustomerHandlers) GetAllCustomersMem(w http.ResponseWriter, r *http.Re
 	}
 
 }
+func (ch *CustomerHandlers) getCustomer(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["customer_id"]
+	customer, err := ch.service.GetCustomer(id)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintf(w, err.Error())
+	} else {
+		w.Header().Add("Content-type", "application/json")
+		json.NewEncoder(w).Encode(customer)
+	}
+}
+func (ch *CustomerHandlers) getCustomerMem(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["customer_id"]
+	customer, err := ch.servStub.GetCustomer(id)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintf(w, err.Error())
+	} else {
+		w.Header().Add("Content-type", "application/json")
+		json.NewEncoder(w).Encode(customer)
+	}
+}
 func GetCustomer(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fmt.Fprint(w, vars["customer_id"])

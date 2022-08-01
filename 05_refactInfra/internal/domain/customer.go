@@ -13,4 +13,5 @@ type Customer struct {
 // contains the contracts for Costumer
 type CustomerRepository interface {
 	FindAll() ([]Customer, error)
+	ById(string) (*Customer, error)
 }
