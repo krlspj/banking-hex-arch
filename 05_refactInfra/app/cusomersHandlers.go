@@ -33,11 +33,15 @@ func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Reque
 	//		{"Carles", "Barcelona", "80288"},
 	//	}
 	//fmt.Fprint(w, customers)
+	status := r.URL.Query().Get("status")
 
-	customers, err := ch.service.GetAllCustomers()
+	customers, err := ch.service.GetAllCustomers(status)
 
 	if err != nil {
-		log.Fatal(err) // do a proper error handling. Skipping for now...
+		log.Println(err) // do a proper error handling. Skipping for now...
+		writeResponse(w, err.Code, err)
+		return
+
 	}
 	respCustomers := make([]Customer, 0, len(customers))
 	for _, v := range customers {
@@ -48,6 +52,7 @@ func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Reque
 		}
 		respCustomers = append(respCustomers, customer)
 	}
+
 	fmt.Println("respCustomers =>", respCustomers)
 	if r.Header.Get("Content-Type") == "application/xml" {
 		// XML response
@@ -55,8 +60,8 @@ func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Reque
 		xml.NewEncoder(w).Encode(respCustomers)
 	} else {
 		// JSON response
-		w.Header().Add("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(respCustomers)
+		//writeResponse(w, http.StatusOK, customers)
+		writeResponse(w, http.StatusOK, respCustomers)
 
 	}
 
@@ -68,8 +73,8 @@ func (ch *CustomerHandlers) GetAllCustomersMem(w http.ResponseWriter, r *http.Re
 	//		{"Carles", "Barcelona", "80288"},
 	//	}
 	//fmt.Fprint(w, customers)
-
-	customers, err := ch.servStub.GetAllCustomers()
+	status := r.URL.Query().Get("status")
+	customers, err := ch.servStub.GetAllCustomers(status)
 
 	if err != nil {
 		log.Fatal(err) // do a proper error handling. Skipping for now...

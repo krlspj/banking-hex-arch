@@ -14,7 +14,7 @@ type CustomerRepositoryStub struct {
 func NewCustomerRepositoryStub() *CustomerRepositoryStub {
 	customers := []domain.Customer{
 		{ID: "1000", Name: "Jennipher", City: "Stockolm", Zipcode: "123450", DateOfBirth: "2001-04-26", Status: "1"},
-		{ID: "1001", Name: "Natthaya", City: "Stockolm", Zipcode: "123450", DateOfBirth: "1997-10-08", Status: "1"},
+		{ID: "1001", Name: "Natthaya", City: "Stockolm", Zipcode: "123450", DateOfBirth: "1997-10-08", Status: "0"},
 	}
 	return &CustomerRepositoryStub{
 		customers: customers,
@@ -22,8 +22,21 @@ func NewCustomerRepositoryStub() *CustomerRepositoryStub {
 
 }
 
-func (s *CustomerRepositoryStub) FindAll() ([]domain.Customer, error) {
-	return s.customers, nil
+func (s *CustomerRepositoryStub) FindAll(status string) ([]domain.Customer, *errs.AppError) {
+	if status == "" {
+		return s.customers, nil
+
+	} else if status == "1" || status == "0" {
+		filtredCustomers := []domain.Customer{}
+		for _, v := range s.customers {
+			if v.Status == status {
+				filtredCustomers = append(filtredCustomers, v)
+			}
+		}
+		return filtredCustomers, nil
+	} else {
+		return nil, nil
+	}
 }
 
 func (s *CustomerRepositoryStub) ById(id string) (*domain.Customer, *errs.AppError) {

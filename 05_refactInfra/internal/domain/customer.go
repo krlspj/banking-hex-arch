@@ -14,6 +14,7 @@ type Customer struct {
 // CustomerRepository corresponds to the port of Curstmer
 // contains the contracts for Costumer
 type CustomerRepository interface {
-	FindAll() ([]Customer, error)
+	// status == 1 status == 0 status == ""
+	FindAll(status string) ([]Customer, *errs.AppError)
 	ById(string) (*Customer, *errs.AppError)
 }
