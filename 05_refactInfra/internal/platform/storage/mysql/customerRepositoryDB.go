@@ -75,7 +75,7 @@ func (cbd *CustomerRepositoryDB) ById(id string) (*domain.Customer, *errs.AppErr
 			logger.Error("Error while scanning customer " + err.Error())
 			return nil, errs.NewNotFoundError("Customer not found")
 		} else {
-			log.Println("Error while scanning customer " + err.Error())
+			logger.Error("Error while scanning customer " + err.Error())
 			return nil, errs.NewUnexpedtedError("Unexpected database error")
 		}
 	}

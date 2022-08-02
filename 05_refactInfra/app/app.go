@@ -22,8 +22,8 @@ func Start() {
 	}
 
 	// routes
-	mux.HandleFunc("/customers", ch.GetAllCustomers).Methods(http.MethodGet)
-	mux.HandleFunc("/customers-mem", ch.GetAllCustomersMem).Methods(http.MethodGet)
+	mux.HandleFunc("/customers", ch.getAllCustomers).Methods(http.MethodGet)
+	mux.HandleFunc("/customers-mem", ch.getAllCustomersMem).Methods(http.MethodGet)
 
 	mux.HandleFunc("/greet", greet).Methods(http.MethodGet)
 	mux.HandleFunc("/customers", CreateCostumer).Methods(http.MethodPost)

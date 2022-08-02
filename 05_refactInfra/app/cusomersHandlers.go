@@ -26,7 +26,7 @@ func greet(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "hello from handler\n")
 }
 
-func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Request) {
+func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("GetAllCustomers")
 	//	customers := []Customer{
 	//		{"Aisha", "Tampaulipas", "11005"},
@@ -43,30 +43,31 @@ func (ch *CustomerHandlers) GetAllCustomers(w http.ResponseWriter, r *http.Reque
 		return
 
 	}
-	respCustomers := make([]Customer, 0, len(customers))
-	for _, v := range customers {
-		customer := Customer{
-			Name:    v.Name,
-			City:    v.City,
-			Zipcode: v.Zipcode,
-		}
-		respCustomers = append(respCustomers, customer)
-	}
+	//remap all customers responses
+	//respCustomers := make([]Customer, 0, len(customers))
+	//for _, v := range customers {
+	//	customer := Customer{
+	//		Name:    v.Name,
+	//		City:    v.City,
+	//		Zipcode: v.Zipcode,
+	//	}
+	//	respCustomers = append(respCustomers, customer)
+	//}
 
-	fmt.Println("respCustomers =>", respCustomers)
+	fmt.Println("respCustomers =>", customers)
 	if r.Header.Get("Content-Type") == "application/xml" {
 		// XML response
 		w.Header().Add("Content-Type", "application/xml")
-		xml.NewEncoder(w).Encode(respCustomers)
+		xml.NewEncoder(w).Encode(customers)
 	} else {
 		// JSON response
 		//writeResponse(w, http.StatusOK, customers)
-		writeResponse(w, http.StatusOK, respCustomers)
+		writeResponse(w, http.StatusOK, customers)
 
 	}
 
 }
-func (ch *CustomerHandlers) GetAllCustomersMem(w http.ResponseWriter, r *http.Request) {
+func (ch *CustomerHandlers) getAllCustomersMem(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("GetAllCustomers")
 	//	customers := []Customer{
 	//		{"Aisha", "Tampaulipas", "11005"},

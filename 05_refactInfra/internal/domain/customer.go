@@ -1,6 +1,9 @@
 package domain
 
-import "github.com/krlspj/banking-hex-arch/05_refactInfra/internal/errs"
+import (
+	"github.com/krlspj/banking-hex-arch/05_refactInfra/internal/dto"
+	"github.com/krlspj/banking-hex-arch/05_refactInfra/internal/errs"
+)
 
 type Customer struct {
 	ID          string
@@ -9,6 +12,26 @@ type Customer struct {
 	Zipcode     string
 	DateOfBirth string
 	Status      string
+}
+
+func (c Customer) statusAsText() string {
+	statusAsText := "active"
+	if c.Status == "0" {
+		statusAsText = "inactive"
+	}
+	return statusAsText
+}
+
+func (c Customer) ToDto() dto.CustomerResponse {
+
+	return dto.CustomerResponse{
+		ID:          c.ID,
+		Name:        c.Name,
+		City:        c.City,
+		Zipcode:     c.Zipcode,
+		DateOfBirth: c.DateOfBirth,
+		Status:      c.statusAsText(),
+	}
 }
 
 // CustomerRepository corresponds to the port of Curstmer
