@@ -6,11 +6,6 @@ import (
 )
 
 func main() {
-	log := logger.NewLogger()
-	logger.Logg.Info("starting app")
-	log.Error("starting app")
-	a := 5
-	log.Infof("hello %v", a)
-	logger.Info("startig the application")
+	logger.Info("starting the application")
 	app.Start()
 }
