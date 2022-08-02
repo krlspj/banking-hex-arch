@@ -1,8 +1,10 @@
 package app
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/krlspj/banking-hex-arch/05_refactInfra/internal/platform/storage/inmemory"
@@ -10,8 +12,17 @@ import (
 	"github.com/krlspj/banking-hex-arch/05_refactInfra/internal/service"
 )
 
+func sanityCheck() {
+	if os.Getenv("SERVER_ADDRESS") == "" ||
+		os.Getenv("SERVER_PORT") == "" {
+		log.Fatal("Environment variable not defined...")
+	}
+
+}
+
 func Start() {
-	log.Println("Server listening on port 8000")
+
+	sanityCheck()
 
 	mux := mux.NewRouter()
 
@@ -31,5 +42,9 @@ func Start() {
 	mux.HandleFunc("/customers-mem/{customer_id:[0-9]+}", ch.getCustomerMem).Methods(http.MethodGet) // make request match -> positives numbers from 0 to 9
 	mux.HandleFunc("/customers1/{customer_id:[0-9]+}", GetCustomer).Methods(http.MethodGet)          // make request match -> positives numbers from 0 to 9
 
-	log.Fatal(http.ListenAndServe("localhost:8000", mux))
+	// starting server
+	address := os.Getenv("SERVER_ADDRESS")
+	port := os.Getenv("SERVER_PORT")
+	log.Printf("Server listening on port %s\n", port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%s", address, port), mux))
 }
