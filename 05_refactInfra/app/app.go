@@ -27,9 +27,17 @@ func Start() {
 	mux := mux.NewRouter()
 
 	// wiring customer handlers
+	dbClient := mysql.OpenConnection()
+	customerRepositoryDB := mysql.NewCustomerRepositoryDB(dbClient)
+	accountRespositoryDB := mysql.NewAccountRepositoryDB(dbClient)
+
 	ch := CustomerHandlers{
-		service:  service.NewCustomerService(mysql.NewCustomerRepositoryDB()),
+		service:  service.NewCustomerService(customerRepositoryDB),
 		servStub: service.NewCustomerService(inmemory.NewCustomerRepositoryStub()),
+	}
+
+	ah := AccountHandlers{
+		service: service.NewAccountService(accountRespositoryDB),
 	}
 
 	// routes
@@ -38,9 +46,10 @@ func Start() {
 
 	mux.HandleFunc("/greet", greet).Methods(http.MethodGet)
 	mux.HandleFunc("/customers", CreateCostumer).Methods(http.MethodPost)
-	mux.HandleFunc("/customers/{customer_id:[0-9]+}", ch.getCustomer).Methods(http.MethodGet)        // make request match -> positives numbers from 0 to 9
-	mux.HandleFunc("/customers-mem/{customer_id:[0-9]+}", ch.getCustomerMem).Methods(http.MethodGet) // make request match -> positives numbers from 0 to 9
-	mux.HandleFunc("/customers1/{customer_id:[0-9]+}", GetCustomer).Methods(http.MethodGet)          // make request match -> positives numbers from 0 to 9
+	mux.HandleFunc("/customers/{customer_id:[0-9]+}", ch.getCustomer).Methods(http.MethodGet)            // make request match -> positives numbers from 0 to 9
+	mux.HandleFunc("/customers/{customer_id:[0-9]+}/account", ah.CreateAccount).Methods(http.MethodPost) // make request match -> positives numbers from 0 to 9
+	mux.HandleFunc("/customers-mem/{customer_id:[0-9]+}", ch.getCustomerMem).Methods(http.MethodGet)     // make request match -> positives numbers from 0 to 9
+	mux.HandleFunc("/customers1/{customer_id:[0-9]+}", GetCustomer).Methods(http.MethodGet)              // make request match -> positives numbers from 0 to 9
 
 	// starting server
 	address := os.Getenv("SERVER_ADDRESS")

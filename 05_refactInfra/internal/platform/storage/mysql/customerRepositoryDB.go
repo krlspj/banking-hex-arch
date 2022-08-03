@@ -2,10 +2,7 @@ package mysql
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
-	"os"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/krlspj/banking-hex-arch/05_refactInfra/internal/domain"
@@ -17,26 +14,9 @@ type CustomerRepositoryDB struct {
 	conn *sql.DB
 }
 
-func NewCustomerRepositoryDB() *CustomerRepositoryDB {
-	dbUser := os.Getenv("DB_USER")
-	dbPasswd := os.Getenv("DB_PASSWD")
-	dbAddr := os.Getenv("DB_ADDR")
-	dbPort := os.Getenv("DB_PORT")
-	dbName := os.Getenv("DB_NAME")
-	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPasswd, dbAddr, dbPort, dbName)
-	//client, err := sql.Open("mysql", "user:password@/dbname")
-	//client, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)/banking")
-	client, err := sql.Open("mysql", dataSource)
-	if err != nil {
-		panic(err)
-	}
-
-	client.SetConnMaxLifetime(time.Minute * 3)
-	client.SetMaxOpenConns(10)
-	client.SetMaxIdleConns(10)
-
+func NewCustomerRepositoryDB(dbClient *sql.DB) *CustomerRepositoryDB {
 	return &CustomerRepositoryDB{
-		conn: client,
+		conn: dbClient,
 	}
 }
 

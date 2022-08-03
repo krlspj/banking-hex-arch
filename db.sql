@@ -23,6 +23,7 @@ CREATE TABLE `accounts` (
 `customer_id` int(11) NOT NULL,
 `opening_date`datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 `account_type` varchar(10) NOT NULL,
+`amount` float(11) NOT NULL,
 `pin` varchar(10) NOT NULL,
 `status` tinyint(4) NOT NULL DEFAULT '1',
 PRIMARY KEY (`account_id`),
