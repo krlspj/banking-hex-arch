@@ -46,10 +46,11 @@ func Start() {
 
 	mux.HandleFunc("/greet", greet).Methods(http.MethodGet)
 	mux.HandleFunc("/customers", CreateCostumer).Methods(http.MethodPost)
-	mux.HandleFunc("/customers/{customer_id:[0-9]+}", ch.getCustomer).Methods(http.MethodGet)            // make request match -> positives numbers from 0 to 9
-	mux.HandleFunc("/customers/{customer_id:[0-9]+}/account", ah.CreateAccount).Methods(http.MethodPost) // make request match -> positives numbers from 0 to 9
-	mux.HandleFunc("/customers-mem/{customer_id:[0-9]+}", ch.getCustomerMem).Methods(http.MethodGet)     // make request match -> positives numbers from 0 to 9
-	mux.HandleFunc("/customers1/{customer_id:[0-9]+}", GetCustomer).Methods(http.MethodGet)              // make request match -> positives numbers from 0 to 9
+	mux.HandleFunc("/customers/{customer_id:[0-9]+}", ch.getCustomer).Methods(http.MethodGet)                                  // make request match -> positives numbers from 0 to 9
+	mux.HandleFunc("/customers/{customer_id:[0-9]+}/account", ah.CreateAccount).Methods(http.MethodPost)                       // make request match -> positives numbers from 0 to 9
+	mux.HandleFunc("/customers-mem/{customer_id:[0-9]+}", ch.getCustomerMem).Methods(http.MethodGet)                           // make request match -> positives numbers from 0 to 9
+	mux.HandleFunc("/customers1/{customer_id:[0-9]+}", GetCustomer).Methods(http.MethodGet)                                    // make request match -> positives numbers from 0 to 9
+	mux.HandleFunc("/customers/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", ah.MakeTransaction).Methods(http.MethodPost) // make request match -> positives numbers from 0 to 9
 
 	// starting server
 	address := os.Getenv("SERVER_ADDRESS")

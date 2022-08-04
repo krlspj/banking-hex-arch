@@ -27,7 +27,7 @@ func NewUnexpedtedError(message string) *AppError {
 	}
 }
 
-func NewAccountValidationError(message string) *AppError {
+func NewValidationError(message string) *AppError {
 	return &AppError{
 		Code:    http.StatusUnprocessableEntity,
 		Message: message,
