@@ -9,6 +9,8 @@ import (
 	"github.com/gorilla/mux"
 	a_mysql "github.com/krlspj/banking-hex-arch/07_security/internal/account/platform/storage/mysql"
 	a_service "github.com/krlspj/banking-hex-arch/07_security/internal/account/service"
+	auth_db "github.com/krlspj/banking-hex-arch/07_security/internal/auth/platform/storage/mysql"
+	"github.com/krlspj/banking-hex-arch/07_security/internal/auth/service"
 	c_inmemory "github.com/krlspj/banking-hex-arch/07_security/internal/customer/platform/storage/inmemory"
 	c_mysql "github.com/krlspj/banking-hex-arch/07_security/internal/customer/platform/storage/mysql"
 	c_service "github.com/krlspj/banking-hex-arch/07_security/internal/customer/service"
@@ -42,6 +44,14 @@ func Start() {
 	ah := AccountHandlers{
 		service: a_service.NewAccountService(accountRespositoryDB),
 	}
+	authRepositoryDB := auth_db.NewAuthRepositoryDB(dbClient)
+	authH := AuthHandler{
+		service: service.NewAuthService(authRepositoryDB),
+	}
+	// Auth endpoints
+	mux.HandleFunc("/auth/login", authH.Login).Methods(http.MethodPost)
+	//mux.HandleFunc("/auth/register", authH.Register).Methods(http.MethodPost)
+	//mux.HandleFunc("/auth/verify", authH.Verify).Methods(http.MethodGet)
 
 	// routes
 	mux.HandleFunc("/customers", ch.getAllCustomers).Methods(http.MethodGet)

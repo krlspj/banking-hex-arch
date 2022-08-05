@@ -15,6 +15,7 @@ type CustomerRepositoryDB struct {
 }
 
 func NewCustomerRepositoryDB(dbClient *sql.DB) *CustomerRepositoryDB {
+	//func NewCustomerRepositoryDB(dbClient *sql.DB) domain.CustomerRepository {
 	return &CustomerRepositoryDB{
 		conn: dbClient,
 	}

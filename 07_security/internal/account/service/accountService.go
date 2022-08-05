@@ -75,6 +75,7 @@ func (s DefaultAccountService) MakeTransaction(req dto.TransactionRequest) (*dto
 }
 
 func NewAccountService(repo domain.AccountRepository) DefaultAccountService {
+	//func NewAccountService(repo domain.AccountRepository) AccountService {
 	return DefaultAccountService{
 		repo: repo,
 	}
