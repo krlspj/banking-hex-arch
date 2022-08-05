@@ -45,16 +45,26 @@ func Start() {
 		service: a_service.NewAccountService(accountRespositoryDB),
 	}
 	authRepositoryDB := auth_db.NewAuthRepositoryDB(dbClient)
+	authServ := service.NewAuthService(authRepositoryDB)
 	authH := AuthHandler{
-		service: service.NewAuthService(authRepositoryDB),
+		service: authServ,
 	}
+
+	// ****** repair auth Middleware ******
+	am := AuthMiddleware{
+		service: authServ,
+	}
+	_ = am
+	//mux.Use(am.authroizationHandler())
 	// Auth endpoints
 	mux.HandleFunc("/auth/login", authH.Login).Methods(http.MethodPost)
+
 	//mux.HandleFunc("/auth/register", authH.Register).Methods(http.MethodPost)
 	//mux.HandleFunc("/auth/verify", authH.Verify).Methods(http.MethodGet)
 
 	// routes
-	mux.HandleFunc("/customers", ch.getAllCustomers).Methods(http.MethodGet)
+	mux.HandleFunc("/customers", ch.getAllCustomers).Methods(http.MethodGet).Name("GetAllCustomers")
+
 	mux.HandleFunc("/customers-mem", ch.getAllCustomersMem).Methods(http.MethodGet)
 
 	mux.HandleFunc("/greet", greet).Methods(http.MethodGet)
