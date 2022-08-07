@@ -56,6 +56,7 @@ func Start() {
 	}
 	_ = am
 	//mux.Use(am.authroizationHandler())
+	//
 	// Auth endpoints
 	mux.HandleFunc("/auth/login", authH.Login).Methods(http.MethodPost)
 
@@ -63,7 +64,7 @@ func Start() {
 	//mux.HandleFunc("/auth/verify", authH.Verify).Methods(http.MethodGet)
 
 	// routes
-	mux.HandleFunc("/customers", ch.getAllCustomers).Methods(http.MethodGet).Name("GetAllCustomers")
+	mux.HandleFunc("/customers", ch.getAllCustomers).Methods(http.MethodGet) //.Name("GetAllCustomers")
 
 	mux.HandleFunc("/customers-mem", ch.getAllCustomersMem).Methods(http.MethodGet)
 

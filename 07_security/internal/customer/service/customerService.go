@@ -6,6 +6,8 @@ import (
 	"github.com/krlspj/banking-hex-arch/07_security/internal/errs"
 )
 
+//go:generate mockery --case=snake --outpkg=servicemocks --output=servicemocks --name=CustomerService
+
 type CustomerService interface {
 	GetAllCustomers(string) ([]dto.CustomerResponse, *errs.AppError)
 	GetCustomer(string) (*dto.CustomerResponse, *errs.AppError)
