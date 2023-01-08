@@ -139,6 +139,7 @@ func CreateCostumer(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "request content from post..")
 }
 
+/*
 func writeResponse(w http.ResponseWriter, code int, data any) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(code)
@@ -146,3 +147,4 @@ func writeResponse(w http.ResponseWriter, code int, data any) {
 		panic(err)
 	}
 }
+*/
